@@ -4,16 +4,16 @@ import '../game_constant.dart';
 import '../responsive.dart';
 import '../util.dart';
 import 'bottom_bar.dart';
-import 'progression_list.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
-  static String routeName = "/home";
+class LeafScreen extends StatefulWidget {
+  const LeafScreen({super.key});
+  static String routeName = "/leaf";
+
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<LeafScreen> createState() => _LeafScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _LeafScreenState extends State<LeafScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,16 +27,15 @@ class _HomeScreenState extends State<HomeScreen> {
             image: Util.getLocalImage(GameConstants.background),
             fit: BoxFit.fill,
           ),
+          Center(
+            child: Text(
+              "LeafScreen",
+            ),
+          ),
           Positioned.fill(
               child: Align(
             alignment: Alignment.bottomCenter,
-            child: Column(
-              children: [
-                Expanded(child: ProgressionList()),
-                Container(height: Responsive.getValueInPixel(100)),
-                BottomBar(HomeScreen.routeName),
-              ],
-            ),
+            child: BottomBar(LeafScreen.routeName),
           ))
         ]),
       ),
