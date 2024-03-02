@@ -8,7 +8,7 @@
             "name": "ggc",
             "request": "launch",
             "type": "dart",
-            "program": "linux/lib/main.dart"
+            "program": "lib/main.dart"
         },
         {
             "name": "ggc (profile mode)",
