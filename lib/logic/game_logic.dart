@@ -13,8 +13,14 @@ class GameLogic {
   static GameData gameData = GameData();
   static const String _storageFile = "GameData.json";
   static late StringStorage ss;
+  static late ScrollController scrollController;
   static Future<void> init() async {
     await loadData();
+    initScrollController();
+  }
+
+  static void initScrollController() {
+    scrollController = ScrollController();
   }
 
   static Future<void> loadData() async {

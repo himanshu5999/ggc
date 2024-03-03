@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:ggc/logic/game_logic.dart';
 import 'package:percent_indicator/percent_indicator.dart';
@@ -31,8 +33,27 @@ class ProgressionList extends StatefulWidget {
 
 class _ProgressionListState extends State<ProgressionList> {
   @override
+  void initState() {
+    GameLogic.scrollController =
+        ScrollController(initialScrollOffset: getInitialOffset());
+    super.initState();
+  }
+
+  double getInitialOffset() {
+    int activeLevel = GameLogic.gameData.currLevel;
+    double levelHeight = Responsive.getValueInPixel(220);
+    double offset =
+        (activeLevel + 4) * levelHeight - (Responsive.getDeviceHeight() / 2);
+    offset = max(0, offset);
+    offset =
+        min((131) * levelHeight - (Responsive.getDeviceHeight() / 2), offset);
+    return offset;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ListView.builder(
+      controller: GameLogic.scrollController,
       padding: EdgeInsets.only(bottom: Responsive.getValueInPixel(100)),
       itemCount: 131,
       reverse: true,

@@ -101,3 +101,54 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
+
+class ScrollButtonModel extends ChangeNotifier {
+  bool isVisible = false;
+  bool disabled = false;
+  late AnimationController animationController;
+  late Animation<double> fadeAnimation;
+
+  ScrollButtonModel(TickerProvider vsync) {
+    animationController = AnimationController(
+        vsync: vsync, duration: const Duration(milliseconds: 200));
+    fadeAnimation = Tween(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: animationController,
+        curve: const Interval(
+          0.0,
+          1.0,
+          curve: Curves.easeInOut,
+        ),
+      ),
+    );
+  }
+  @override
+  void dispose() {
+    animationController.dispose();
+    super.dispose();
+  }
+
+  void show() {
+    if (isVisible) {
+      return;
+    }
+    isVisible = true;
+    animationController.forward();
+  }
+
+  void hide({bool force = false}) {
+    if (!isVisible) {
+      return;
+    }
+    animationController.reverse();
+  }
+}
+
+class ScrollButton extends StatelessWidget {
+  const ScrollButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
