@@ -79,18 +79,23 @@ class _LeafScreenState extends State<LeafScreen> {
         ? Container(
             color: Colors.red.withOpacity(0.0),
           )
-        : Container(
-            margin: EdgeInsets.only(bottom: Responsive.getDefaultHeightDim(BottomBar.height)),
-            child: Stack(
-              children: [
-                Rive(
-                  artboard: _riveArtboard!,
-                  enablePointerEvents: true,
-                  // useArtboardSize: true,
-                  fit: BoxFit.cover,
-                ),
-              ],
+        : Transform.scale(
+          scale : 1.0,
+          child: Container(
+            width: Responsive.getDeviceWidth(),
+            height: Responsive.getDeviceHeight(),
+              margin: EdgeInsets.only(bottom: Responsive.getDefaultHeightDim(BottomBar.height)),
+              child: Stack(
+                children: [
+                  Rive(
+                    artboard: _riveArtboard!,
+                    enablePointerEvents: true,
+                    // useArtboardSize: true,
+                    fit: BoxFit.cover,
+                  ),
+                ],
+              ),
             ),
-          );
+        );
   }
 }
