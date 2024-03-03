@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:ggc/model/game_logic.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 import '../game_constant.dart';
 import '../responsive.dart';
-import '../screen_transition.dart';
 import '../util.dart';
-import 'add_list_item_screen.dart';
 
 class ProgressionList extends StatefulWidget {
-  static const selectedIndex = 1;
   static List<double> listMargin = [
     0,
     -120,
@@ -35,11 +33,12 @@ class _ProgressionListState extends State<ProgressionList> {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
+      padding: EdgeInsets.only(bottom: Responsive.getValueInPixel(100)),
       itemCount: 131,
       reverse: true,
       scrollDirection: Axis.vertical,
       itemBuilder: (context, index) =>
-          tileWidget(index == ProgressionList.selectedIndex, index),
+          tileWidget(index == GameLogic.gameData.currLevel, index),
     );
   }
 
@@ -57,7 +56,9 @@ class _ProgressionListState extends State<ProgressionList> {
         children: [
           GestureDetector(
             onTap: () {
-              _onTap(index);
+              if (index == GameLogic.gameData.currLevel) {
+                GameLogic.navigateFromHome(context);
+              }
             },
             child: Container(
               margin: EdgeInsets.only(
@@ -66,7 +67,7 @@ class _ProgressionListState extends State<ProgressionList> {
                           index % ProgressionList.listMargin.length]) -
                       Responsive.getValueInPixel(330) / 2),
               child: Stack(children: [
-                index == ProgressionList.selectedIndex
+                index == GameLogic.gameData.currLevel
                     ? testWidget()
                     : Container(),
                 Center(
@@ -81,14 +82,14 @@ class _ProgressionListState extends State<ProgressionList> {
                           child: Image(
                               width: Responsive.getValueInPixel(235),
                               height: Responsive.getValueInPixel(215),
-                              image: index <= ProgressionList.selectedIndex
+                              image: index <= GameLogic.gameData.currLevel
                                   ? Util.getLocalImage(
                                       GameConstants.levelButtom)
                                   : Util.getLocalImage(
                                       GameConstants.freezedLevel)),
                         ),
                       ),
-                      if (index >= ProgressionList.selectedIndex)
+                      if (index >= GameLogic.gameData.currLevel)
                         Center(
                           child: Container(
                             margin: EdgeInsets.only(
@@ -98,7 +99,7 @@ class _ProgressionListState extends State<ProgressionList> {
                               "${index + 1}",
                               style: TextStyle(
                                 decoration: TextDecoration.none,
-                                color: index <= ProgressionList.selectedIndex
+                                color: index <= GameLogic.gameData.currLevel
                                     ? const Color(0xffffffff)
                                     : const Color(0x0052656d).withOpacity(0.5),
                                 fontWeight: FontWeight.w600,
@@ -137,18 +138,9 @@ class _ProgressionListState extends State<ProgressionList> {
     return CircularPercentIndicator(
       radius: Responsive.getValueInPixel(330) / 2,
       lineWidth: Responsive.getValueInPixel(30),
-      percent: 0.5,
+      percent: 0.3,
       backgroundColor: Color(0x002C383F).withOpacity(1),
       progressColor: Color(0x00CE82FF).withOpacity(1),
     );
-  }
-
-  void _onTap(int index) {
-    if (index == ProgressionList.selectedIndex) {
-      Navigator.push(
-          context,
-          ScreenTransition.slideRouteToLeft(
-              AddListItemScreen.routeName, const AddListItemScreen()));
-    }
   }
 }

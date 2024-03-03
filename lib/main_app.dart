@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:ggc/ui/bought_item_screen.dart';
+import 'package:ggc/ui/outro_screen.dart';
 
 import 'responsive.dart';
 import 'ui/add_list_item_screen.dart';
@@ -20,6 +22,8 @@ class MainApp extends StatelessWidget {
       StoreScreen.routeName: (context) => const StoreScreen(),
       AddListItemScreen.routeName: (context) => const AddListItemScreen(),
       TakeBagScreen.routeName: (context) => const TakeBagScreen(),
+      BoughtItemScreen.routeName: (context) => const BoughtItemScreen(),
+      OutroScreen.routeName: (context) => const OutroScreen(),
     };
 
     return MaterialApp(

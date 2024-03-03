@@ -7,7 +7,8 @@ import 'bottom_bar.dart';
 
 class ScreenTopBar extends StatelessWidget {
   final double barValue;
-  const ScreenTopBar({super.key, required this.barValue});
+  final bool showBack;
+  const ScreenTopBar({super.key, required this.barValue, this.showBack = true});
 
   @override
   Widget build(BuildContext context) {
@@ -17,26 +18,27 @@ class ScreenTopBar extends StatelessWidget {
       width: Responsive.getDeviceWidth(),
       color: Colors.transparent,
       child: Stack(children: [
-        GestureDetector(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: Container(
-            margin: EdgeInsets.only(left: Responsive.getValueInPixel(80)),
-            width: Responsive.getValueInPixel(80),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image(
-                  height: Responsive.getValueInPixel(80),
-                  width: Responsive.getValueInPixel(80),
-                  image: Util.getLocalImage(GameConstants.backIcon),
-                  fit: BoxFit.fill,
-                ),
-              ],
+        if (showBack)
+          GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Container(
+              margin: EdgeInsets.only(left: Responsive.getValueInPixel(80)),
+              width: Responsive.getValueInPixel(80),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image(
+                    height: Responsive.getValueInPixel(80),
+                    width: Responsive.getValueInPixel(80),
+                    image: Util.getLocalImage(GameConstants.backIcon),
+                    fit: BoxFit.fill,
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
         Center(
           child: Container(
             height: Responsive.getDefaultHeightDim(160),
@@ -97,8 +99,12 @@ class ScreenTopBar extends StatelessWidget {
 class ScreenBottomBar extends StatelessWidget {
   final String buttonText;
   final Function onButtonTap;
+  final int item;
   const ScreenBottomBar(
-      {super.key, required this.buttonText, required this.onButtonTap});
+      {super.key,
+      required this.buttonText,
+      required this.onButtonTap,
+      this.item = 1});
 
   @override
   Widget build(BuildContext context) {
@@ -106,23 +112,25 @@ class ScreenBottomBar extends StatelessWidget {
       height: Responsive.getDefaultHeightDim(BottomBar.height),
       width: Responsive.getDeviceWidth(),
       color: Colors.white,
-      child: Center(
-        child: Stack(children: [
-          SizedBox(
-            width: Responsive.getDefaultWidthDim(1178),
-            height: Responsive.getDefaultHeightDim(158),
-            child: Image(
+      child: GestureDetector(
+        onTap: () {
+          onButtonTap();
+        },
+        child: Center(
+          child: Stack(children: [
+            SizedBox(
               width: Responsive.getDefaultWidthDim(1178),
               height: Responsive.getDefaultHeightDim(158),
-              image: Util.getLocalImage(GameConstants.listButton),
-              fit: BoxFit.fill,
+              child: Image(
+                width: Responsive.getDefaultWidthDim(1178),
+                height: Responsive.getDefaultHeightDim(158),
+                image: item == 0
+                    ? Util.getLocalImage(GameConstants.disableButton)
+                    : Util.getLocalImage(GameConstants.listButton),
+                fit: BoxFit.fill,
+              ),
             ),
-          ),
-          GestureDetector(
-            onTap: () {
-              onButtonTap();
-            },
-            child: SizedBox(
+            SizedBox(
               width: Responsive.getDefaultWidthDim(1178),
               height: Responsive.getDefaultHeightDim(158),
               child: Center(
@@ -141,8 +149,8 @@ class ScreenBottomBar extends StatelessWidget {
                 ),
               ),
             ),
-          ),
-        ]),
+          ]),
+        ),
       ),
     );
   }

@@ -35,6 +35,8 @@ dependencies:
   cupertino_icons: ^1.0.2
   percent_indicator: ^4.2.3
   json_annotation: ^4.0.1
+  path_provider: ^2.0.8
+  rive: ^0.12.3
 
 dev_dependencies:
   flutter_test:
@@ -66,6 +68,7 @@ flutter:
   assets:
     - assets/
     - assets/images/
+    - assets/animations/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

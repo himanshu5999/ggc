@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ggc/model/game_logic.dart';
 
 import '../game_constant.dart';
 import '../responsive.dart';
@@ -17,13 +18,15 @@ class AddListItemScreen extends StatefulWidget {
 }
 
 class _AddListItemScreenState extends State<AddListItemScreen> {
+  final ScrollController _scrollController = ScrollController();
   final TextEditingController _controller = TextEditingController();
-  final List<String> _items = [];
   bool _showTextInput = false;
   final FocusNode _focusNode = FocusNode();
+  late List<String> items = [];
   @override
   void initState() {
     super.initState();
+    items = GameLogic.getListData();
     _focusNode.addListener(() {
       if (_controller.text.isNotEmpty) {
         _addItem(_controller.text);
@@ -39,16 +42,21 @@ class _AddListItemScreenState extends State<AddListItemScreen> {
   void _addItem(String description) {
     if (description.isNotEmpty) {
       setState(() {
-        _items.add(description);
+        GameLogic.gameData.listData[description] = false;
+        items.add(description);
         _controller.clear();
         _showTextInput = false;
+        GameLogic.saveData();
       });
     }
   }
 
   void _removeItem(int index) {
     setState(() {
-      _items.removeAt(index);
+      String desc = items[index];
+      items.removeAt(index);
+      GameLogic.gameData.listData.remove(desc);
+      GameLogic.saveData();
     });
   }
 
@@ -61,40 +69,50 @@ class _AddListItemScreenState extends State<AddListItemScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-          width: Responsive.getDeviceWidth(),
-          height: Responsive.getDeviceHeight(),
-          child: Stack(fit: StackFit.expand, children: [
-            Image(
-              width: Responsive.getDeviceWidth(),
-              height: Responsive.getDeviceHeight(),
-              image: Util.getLocalImage(GameConstants.background),
-              fit: BoxFit.fill,
-            ),
-            Positioned(
-                child: Align(
-              alignment: Alignment.topCenter,
-              child: Column(
-                children: [
-                  const ScreenTopBar(barValue: 0.1),
-                  addItemsWidget(),
-                  listWidget(),
-                ],
-              ),
-            )),
-            plusButtonWidget(),
-            Positioned(
-                child: Align(
-              alignment: Alignment.bottomCenter,
-              child: ScreenBottomBar(
-                  buttonText: "ITEMS ADDED", onButtonTap: onBottomButtonTap),
-            )),
-          ])),
+    return Container(
+      width: Responsive.getDeviceWidth(),
+      height: Responsive.getDeviceHeight(),
+      decoration: BoxDecoration(
+          image: DecorationImage(
+        image: Util.getLocalImage(GameConstants.background),
+        fit: BoxFit.cover,
+      )),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Container(
+            color: Colors.transparent,
+            width: Responsive.getDeviceWidth(),
+            height: Responsive.getDeviceHeight(),
+            child: Stack(fit: StackFit.expand, children: [
+              Positioned(
+                  child: Align(
+                alignment: Alignment.topCenter,
+                child: Column(
+                  children: [
+                    const ScreenTopBar(barValue: 0.1),
+                    addItemsWidget(),
+                    listWidget(),
+                  ],
+                ),
+              )),
+              plusButtonWidget(),
+              Positioned(
+                  child: Align(
+                alignment: Alignment.bottomCenter,
+                child: ScreenBottomBar(
+                    item: items.length,
+                    buttonText: "ITEMS ADDED",
+                    onButtonTap: onBottomButtonTap),
+              )),
+            ])),
+      ),
     );
   }
 
   void onBottomButtonTap() {
+    if (items.isEmpty) {
+      return;
+    }
     Navigator.push(
         context,
         ScreenTransition.slideRouteToLeft(
@@ -264,12 +282,13 @@ class _AddListItemScreenState extends State<AddListItemScreen> {
   Widget listWidget() {
     return Expanded(
       child: ListView.builder(
+        controller: _scrollController,
         padding: EdgeInsets.only(
             top: Responsive.getDefaultHeightDim(20),
             bottom: Responsive.getDefaultHeightDim(300)),
-        itemCount: _items.length + (_showTextInput ? 1 : 0),
+        itemCount: items.length + (_showTextInput ? 1 : 0),
         itemBuilder: (BuildContext context, int index) {
-          if (_showTextInput && index == _items.length) {
+          if (_showTextInput && index == items.length) {
             return ListTile(
               title: Row(
                 children: [
@@ -302,7 +321,7 @@ class _AddListItemScreenState extends State<AddListItemScreen> {
             );
           }
           return Dismissible(
-              key: Key(_items[index]),
+              key: Key(items[index]),
               onDismissed: (direction) {
                 _removeItem(index);
               },
@@ -323,7 +342,7 @@ class _AddListItemScreenState extends State<AddListItemScreen> {
                           left: Responsive.getValueInPixel(50),
                           top: Responsive.getValueInPixel(80)),
                       child: Text(
-                        _items[index],
+                        items[index],
                         style: TextStyle(
                           decoration: TextDecoration.none,
                           color: const Color(0xff4B4B4B),

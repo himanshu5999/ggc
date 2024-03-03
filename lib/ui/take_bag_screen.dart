@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:ggc/model/game_logic.dart';
+import 'package:ggc/ui/bought_item_screen.dart';
+import 'package:ggc/ui/home_screen.dart';
 
 import '../game_constant.dart';
 import '../responsive.dart';
+import '../screen_transition.dart';
 import '../util.dart';
 import 'common_widgets.dart';
 
@@ -74,5 +78,17 @@ class _TakeBagScreenState extends State<TakeBagScreen> {
     );
   }
 
-  void onBottomButtonTap() {}
+  void onBottomButtonTap() {
+    GameLogic.setCurrentStage(1);
+    Navigator.pushAndRemoveUntil(
+        context,
+        ScreenTransition.slideRouteToLeft(
+            BoughtItemScreen.routeName, const BoughtItemScreen()), (route) {
+      if (route.settings.name == HomeScreen.routeName) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+  }
 }

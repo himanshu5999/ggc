@@ -6,9 +6,20 @@ part of 'game_data.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-GameData _$GameDataFromJson(Map<String, dynamic> json) =>
-    GameData()..createdTime = json['ct'] as int;
+GameData _$GameDataFromJson(Map<String, dynamic> json) => GameData()
+  ..sunCurrency = json['sc'] as int? ?? 0
+  ..dropletCurrency = json['dc'] as int? ?? 0
+  ..currLevel = json['cl'] as int? ?? 0
+  ..currStage = json['cs'] as int? ?? 0
+  ..listData = (json['ld'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry(k, e as bool),
+      ) ??
+      {};
 
 Map<String, dynamic> _$GameDataToJson(GameData instance) => <String, dynamic>{
-      'ct': instance.createdTime,
+      'sc': instance.sunCurrency,
+      'dc': instance.dropletCurrency,
+      'cl': instance.currLevel,
+      'cs': instance.currStage,
+      'ld': instance.listData,
     };

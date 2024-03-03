@@ -1,9 +1,20 @@
 class GameConstants {
+  // reward
+  static const int sunReward = 1;
+  static const int dropletReward = 2;
+
   // font
   static const fontFamily = "Lato";
 
   // path
   static String assetsImagesPath = "assets/images";
+  static String getLocalAnimationPath(String ani) {
+    return "assets/animations/$ani";
+  }
+
+  // animations
+  static const String boxRive = "box.riv";
+  static const String boxAniamtion = "open box";
 
   // images
   static const String background = "background.png";
@@ -20,4 +31,10 @@ class GameConstants {
   static const String plusButton = "plus_button.png";
   static const String listTile = "list_tile.png";
   static const String takeBag = "take_bag.png";
+  static const String sunIcon = "sun.png";
+  static const String droplet = "droplet.png";
+  static const String doYouKnow = "do_you_know.png";
+  static const String check = "check.png";
+  static const String done = "done.png";
+  static const String disableButton = "disable_button.png";
 }
