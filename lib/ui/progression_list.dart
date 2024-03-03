@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ggc/model/game_logic.dart';
+import 'package:ggc/logic/game_logic.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 import '../game_constant.dart';

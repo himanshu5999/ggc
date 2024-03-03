@@ -15,6 +15,7 @@ class GameConstants {
   // animations
   static const String boxRive = "box.riv";
   static const String boxAniamtion = "open box";
+  static const String treeRive = "tree.riv";
 
   // images
   static const String background = "background.png";

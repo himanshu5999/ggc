@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:rive/rive.dart';
 
 import '../game_constant.dart';
+import '../logic/leaf_logic.dart';
 import '../responsive.dart';
 import '../util.dart';
 import 'bottom_bar.dart';
@@ -14,6 +16,40 @@ class LeafScreen extends StatefulWidget {
 }
 
 class _LeafScreenState extends State<LeafScreen> {
+  Artboard? _riveArtboard;
+  StateMachineController? mainStateController;
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  @override
+  void dispose() {
+    if (mainStateController != null) {
+      mainStateController!.dispose();
+    }
+    super.dispose();
+  }
+
+  Future<void> _load() async {
+    if (mounted) {
+      setState(() {
+        _riveArtboard = LeafLogic.riveFile.mainArtboard.instance();
+      });
+    }
+
+    mainStateController = StateMachineController.fromArtboard(_riveArtboard!, "State Machine 1");
+    _riveArtboard!.addController(mainStateController!);
+    updateProgress(50.0);
+  }
+
+  void updateProgress(double val) {
+    SMINumber input = mainStateController!.findSMI("input");
+    input.change(val);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,11 +63,7 @@ class _LeafScreenState extends State<LeafScreen> {
             image: Util.getLocalImage(GameConstants.background),
             fit: BoxFit.fill,
           ),
-          Center(
-            child: Text(
-              "LeafScreen",
-            ),
-          ),
+          getTreeWidget(),
           Positioned.fill(
               child: Align(
             alignment: Alignment.bottomCenter,
@@ -40,5 +72,25 @@ class _LeafScreenState extends State<LeafScreen> {
         ]),
       ),
     );
+  }
+
+  Widget getTreeWidget() {
+    return _riveArtboard == null
+        ? Container(
+            color: Colors.red.withOpacity(0.0),
+          )
+        : Container(
+            margin: EdgeInsets.only(bottom: Responsive.getDefaultHeightDim(BottomBar.height)),
+            child: Stack(
+              children: [
+                Rive(
+                  artboard: _riveArtboard!,
+                  enablePointerEvents: true,
+                  // useArtboardSize: true,
+                  fit: BoxFit.cover,
+                ),
+              ],
+            ),
+          );
   }
 }

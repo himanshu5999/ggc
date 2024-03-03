@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:ggc/model/game_logic.dart';
+import 'package:ggc/logic/game_logic.dart';
 
 import 'main_app.dart';
 import 'util.dart';

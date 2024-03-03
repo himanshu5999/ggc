@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ggc/model/game_logic.dart';
+import 'package:ggc/logic/game_logic.dart';
 import 'package:ggc/ui/common_widgets.dart';
 import 'package:ggc/ui/outro_screen.dart';
 

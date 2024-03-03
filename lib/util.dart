@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'game_constant.dart';
+import 'logic/leaf_logic.dart';
 import 'responsive.dart';
 
 class Util {
@@ -11,7 +12,9 @@ class Util {
     await loadData();
   }
 
-  static loadData() async {}
+  static loadData() async {
+    await LeafLogic.loadRiveFile();
+  }
 
   static double getTextScaleFactor() {
     return 1.0;

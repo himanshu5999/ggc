@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ggc/game_constant.dart';
-import 'package:ggc/model/game_logic.dart';
+import 'package:ggc/logic/game_logic.dart';
 import 'package:ggc/responsive.dart';
 
 import '../util.dart';
