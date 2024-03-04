@@ -62,7 +62,9 @@ class _LeafScreenState extends State<LeafScreen> with TickerProviderStateMixin {
     }
     SchedulerBinding.instance.addPostFrameCallback((_) {
       Timer(const Duration(milliseconds: 200), () {
-        fadeController.forward();
+        if (showTree) {
+          fadeController.forward();
+        }
       });
     });
   }
@@ -80,9 +82,10 @@ class _LeafScreenState extends State<LeafScreen> with TickerProviderStateMixin {
     double trigger = LeafLogic.nextLevelTriggerVal();
     LeafLogic.completeLevel();
     updateProgress(trigger);
-    setState(() {
+    if(!showTree) {
       showTree = true;
-    });
+      fadeController.forward();
+    }
   }
 
   @override
@@ -119,16 +122,16 @@ class _LeafScreenState extends State<LeafScreen> with TickerProviderStateMixin {
   }
 
   Widget getTreeWidget() {
-    return _riveArtboard == null || !showTree
+    return _riveArtboard == null
         ? Container(
             color: Colors.red.withOpacity(0.0),
           )
         : Transform.translate(
-            offset: Offset(0, 0.0),
+            offset: const Offset(0, 0.0),
             child: Container(
               width: Responsive.getDeviceWidth(),
               height: Responsive.getDeviceHeight(),
-              margin: EdgeInsets.only(bottom: Responsive.getDefaultHeightDim(BottomBar.height)),
+              margin: EdgeInsets.only(bottom: Responsive.getDefaultHeightDim(BottomBar.height * 0.3)),
               child: Stack(
                 children: [
                   Rive(
