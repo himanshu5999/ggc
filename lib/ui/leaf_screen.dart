@@ -255,7 +255,7 @@ class _LeafScreenState extends State<LeafScreen> with TickerProviderStateMixin {
     return GestureDetector(
       onTap: () {
         if (!LeafLogic.canUpgradeTree()) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Not enough currency')));
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Not enough sun or water')));
 
           return;
         }
