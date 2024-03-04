@@ -12,6 +12,10 @@ class GameConstants {
     return "assets/animations/$ani";
   }
 
+  static String getLocalConfigPath(String file) {
+    return "assets/config/$file";
+  }
+
   // animations
   static const String boxRive = "box.riv";
   static const String boxAniamtion = "open box";

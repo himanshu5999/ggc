@@ -42,7 +42,7 @@ class _LeafScreenState extends State<LeafScreen> {
 
     mainStateController = StateMachineController.fromArtboard(_riveArtboard!, "State Machine 1");
     _riveArtboard!.addController(mainStateController!);
-    updateProgress(50.0);
+    updateProgress(LeafLogic.currLevelTriggerVal());
   }
 
   void updateProgress(double val) {
@@ -79,8 +79,8 @@ class _LeafScreenState extends State<LeafScreen> {
         ? Container(
             color: Colors.red.withOpacity(0.0),
           )
-        : Transform.scale(
-          scale : 1.0,
+        : Transform.translate(
+          offset: Offset(0, 0.0),
           child: Container(
             width: Responsive.getDeviceWidth(),
             height: Responsive.getDeviceHeight(),
@@ -90,7 +90,6 @@ class _LeafScreenState extends State<LeafScreen> {
                   Rive(
                     artboard: _riveArtboard!,
                     enablePointerEvents: true,
-                    // useArtboardSize: true,
                     fit: BoxFit.cover,
                   ),
                 ],
