@@ -78,14 +78,42 @@ class ScreenTopBar extends StatelessWidget {
                   ),
                 ],
               ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(
+                        left: Responsive.getDefaultWidthDim(825) / 3),
+                    height: Responsive.getDefaultHeightDim(55),
+                    width: Responsive.getValueInPixel(1),
+                    color: Colors.black,
+                  ),
+                ],
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(
+                        left: 2 * Responsive.getDefaultWidthDim(825) / 3),
+                    height: Responsive.getDefaultHeightDim(55),
+                    width: Responsive.getValueInPixel(1),
+                    color: Colors.black,
+                  ),
+                ],
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(),
-                  Image(
-                      height: Responsive.getValueInPixel(150),
-                      width: Responsive.getValueInPixel(150),
-                      image: Util.getLocalImage(GameConstants.giftIcon))
+                  Container(
+                    margin:
+                        EdgeInsets.only(bottom: Responsive.getValueInPixel(40)),
+                    child: Image(
+                        height: Responsive.getValueInPixel(150),
+                        width: Responsive.getValueInPixel(150),
+                        image: Util.getLocalImage(GameConstants.giftIcon)),
+                  )
                 ],
               ),
             ]),
@@ -138,7 +166,7 @@ class ScreenBottomBar extends StatelessWidget {
                   buttonText,
                   style: TextStyle(
                     decoration: TextDecoration.none,
-                    color: Colors.white,
+                    color: item == 0 ? Color(0xffAFAFAF) : Colors.white,
                     fontWeight: FontWeight.w500,
                     fontStyle: FontStyle.normal,
                     fontFamily: GameConstants.fontFamily,

@@ -21,6 +21,7 @@ class _AddListItemScreenState extends State<AddListItemScreen> {
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _controller = TextEditingController();
   bool _showTextInput = false;
+  bool showBottomBar = true;
   final FocusNode _focusNode = FocusNode();
   late List<String> items = [];
   @override
@@ -28,6 +29,15 @@ class _AddListItemScreenState extends State<AddListItemScreen> {
     super.initState();
     items = GameLogic.getListData();
     _focusNode.addListener(() {
+      if (_focusNode.hasFocus) {
+        setState(() {
+          showBottomBar = false;
+        });
+      } else {
+        setState(() {
+          showBottomBar = true;
+        });
+      }
       if (_controller.text.isNotEmpty) {
         _addItem(_controller.text);
       }
@@ -96,14 +106,7 @@ class _AddListItemScreenState extends State<AddListItemScreen> {
                 ),
               )),
               plusButtonWidget(),
-              Positioned(
-                  child: Align(
-                alignment: Alignment.bottomCenter,
-                child: ScreenBottomBar(
-                    item: items.length,
-                    buttonText: "ITEMS ADDED",
-                    onButtonTap: onBottomButtonTap),
-              )),
+              if (showBottomBar) bottomBar()
             ])),
       ),
     );
@@ -117,6 +120,15 @@ class _AddListItemScreenState extends State<AddListItemScreen> {
         context,
         ScreenTransition.slideRouteToLeft(
             TakeBagScreen.routeName, const TakeBagScreen()));
+  }
+
+  Widget bottomBar() {
+    return Positioned(
+        bottom: 0,
+        child: ScreenBottomBar(
+            item: items.length,
+            buttonText: "ITEMS ADDED",
+            onButtonTap: onBottomButtonTap));
   }
 
   Widget addItemsWidget() {

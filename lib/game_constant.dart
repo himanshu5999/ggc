@@ -43,4 +43,5 @@ class GameConstants {
   static const String disableButton = "disable_button.png";
   static const String leafToaster = "leaf_toaster.png";
   static const String line = "line.png";
+  static const String rays = "rays.png";
 }

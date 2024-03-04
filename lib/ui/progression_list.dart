@@ -163,7 +163,7 @@ class _ProgressionListState extends State<ProgressionList> {
     return CircularPercentIndicator(
       radius: Responsive.getValueInPixel(330) / 2,
       lineWidth: Responsive.getValueInPixel(30),
-      percent: 0.3,
+      percent: GameLogic.gameData.currStage == 0 ? 0 : 0.5,
       backgroundColor: Color(0x002C383F).withOpacity(1),
       progressColor: Color(0x00CE82FF).withOpacity(1),
     );

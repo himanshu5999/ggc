@@ -89,12 +89,6 @@ class GameLogic {
   }
 
   static bool allItemBought() {
-    List<String> item = getListData();
-    for (int i = 0; i < item.length; i++) {
-      if (!gameData.listData[item[i]]!) {
-        return false;
-      }
-    }
     return true;
   }
 }
