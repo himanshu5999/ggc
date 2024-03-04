@@ -54,7 +54,9 @@ class _ProgressionListState extends State<ProgressionList> {
   Widget build(BuildContext context) {
     return ListView.builder(
       controller: GameLogic.scrollController,
-      padding: EdgeInsets.only(bottom: Responsive.getValueInPixel(100)),
+      padding: EdgeInsets.only(
+          bottom: Responsive.getValueInPixel(100),
+          top: Responsive.getValueInPixel(500)),
       itemCount: 131,
       reverse: true,
       scrollDirection: Axis.vertical,
@@ -125,7 +127,9 @@ class _ProgressionListState extends State<ProgressionList> {
                                     : const Color(0x0052656d).withOpacity(0.5),
                                 fontWeight: FontWeight.w600,
                                 fontStyle: FontStyle.normal,
-                                fontSize: Responsive.getFontSize(126),
+                                fontSize: index >= 99
+                                    ? Responsive.getFontSize(105)
+                                    : Responsive.getFontSize(126),
                               ),
                               textScaleFactor: 1.0,
                               textAlign: TextAlign.center,

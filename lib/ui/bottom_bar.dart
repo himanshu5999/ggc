@@ -83,17 +83,24 @@ class BottomBar extends StatelessWidget {
   Widget getIconWidget(String screen, bool selected) {
     return Center(
       child: Container(
-        width: Responsive.getValueInPixel(150),
-        height: Responsive.getValueInPixel(150),
+        color: Colors.transparent,
+        width: Responsive.getValueInPixel(350),
+        height: Responsive.getValueInPixel(350),
         child: Stack(
           children: [
             if (selected)
-              Image(image: Util.getLocalImage(GameConstants.bottomSelected)),
+              Center(
+                child: Image(
+                    width: Responsive.getValueInPixel(150),
+                    height: Responsive.getValueInPixel(150),
+                    image: Util.getLocalImage(GameConstants.bottomSelected)),
+              ),
             Center(
               child: Container(
                 width: Responsive.getValueInPixel(100),
                 height: Responsive.getValueInPixel(100),
-                child: Image(image: Util.getLocalImage(screenImage(screen))),
+                child: Image(
+                    image: Util.getLocalImage(screenImage(screen, selected))),
               ),
             )
           ],
@@ -102,13 +109,25 @@ class BottomBar extends StatelessWidget {
     );
   }
 
-  String screenImage(String screen) {
+  String screenImage(String screen, bool selected) {
     if (screen == HomeScreen.routeName) {
-      return GameConstants.home;
+      if (selected) {
+        return GameConstants.selectedHome;
+      } else {
+        return GameConstants.home;
+      }
     } else if (screen == LeafScreen.routeName) {
-      return GameConstants.leaf;
+      if (selected) {
+        return GameConstants.selectedLeaf;
+      } else {
+        return GameConstants.leaf;
+      }
     } else {
-      return GameConstants.store;
+      if (selected) {
+        return GameConstants.selectedStore;
+      } else {
+        return GameConstants.store;
+      }
     }
   }
 

@@ -408,6 +408,9 @@ class _OutroScreenState extends State<OutroScreen>
   }
 
   void onBottomButtonTap() {
+    if (!enebleButton) {
+      return;
+    }
     Navigator.pushReplacement(context,
         ScreenTransition.fadeRoute(HomeScreen.routeName, const HomeScreen()));
   }
