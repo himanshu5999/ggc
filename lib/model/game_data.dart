@@ -19,6 +19,9 @@ class GameData {
   @JsonKey(name: 'ld', defaultValue: {})
   Map<String, bool> listData = {};
 
+  @JsonKey(name: 'ctl', defaultValue: 0)
+  int currTreeLevel = 0;
+
   GameData();
 
   factory GameData.fromJson(Map<String, dynamic> json) =>

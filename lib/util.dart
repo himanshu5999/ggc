@@ -13,7 +13,7 @@ class Util {
   }
 
   static loadData() async {
-    await LeafLogic.loadRiveFile();
+    await LeafLogic.init();
   }
 
   static double getTextScaleFactor() {
