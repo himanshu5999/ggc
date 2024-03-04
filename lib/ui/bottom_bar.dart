@@ -93,7 +93,8 @@ class BottomBar extends StatelessWidget {
               child: Container(
                 width: Responsive.getValueInPixel(100),
                 height: Responsive.getValueInPixel(100),
-                child: Image(image: Util.getLocalImage(screenImage(screen))),
+                child: Image(
+                    image: Util.getLocalImage(screenImage(screen, selected))),
               ),
             )
           ],
@@ -102,13 +103,25 @@ class BottomBar extends StatelessWidget {
     );
   }
 
-  String screenImage(String screen) {
+  String screenImage(String screen, bool selected) {
     if (screen == HomeScreen.routeName) {
-      return GameConstants.home;
+      if (selected) {
+        return GameConstants.selectedHome;
+      } else {
+        return GameConstants.home;
+      }
     } else if (screen == LeafScreen.routeName) {
-      return GameConstants.leaf;
+      if (selected) {
+        return GameConstants.selectedLeaf;
+      } else {
+        return GameConstants.leaf;
+      }
     } else {
-      return GameConstants.store;
+      if (selected) {
+        return GameConstants.selectedStore;
+      } else {
+        return GameConstants.store;
+      }
     }
   }
 

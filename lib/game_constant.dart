@@ -23,6 +23,9 @@ class GameConstants {
   static const String home = "home.png";
   static const String leaf = "leaf_icon.png";
   static const String store = "store_icon.png";
+  static const String selectedHome = "selected_home.png";
+  static const String selectedLeaf = "selected_leaf.png";
+  static const String selectedStore = "selected_store.png";
   static const String freezedLevel = "freezed_level.png";
   static const String levelButtom = "level_button.png";
   static const String tick = "tick.png";
@@ -38,4 +41,6 @@ class GameConstants {
   static const String check = "check.png";
   static const String done = "done.png";
   static const String disableButton = "disable_button.png";
+  static const String leafToaster = "leaf_toaster.png";
+  static const String line = "line.png";
 }
