@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ggc/logic/game_logic.dart';
+import 'package:ggc/ui/home_screen.dart';
 
 import '../game_constant.dart';
 import '../responsive.dart';
@@ -77,49 +78,68 @@ class _AddListItemScreenState extends State<AddListItemScreen> {
     super.dispose();
   }
 
+  Future<bool> _onBackPressed() async {
+    popUntilRoot();
+    Navigator.push(context,
+        ScreenTransition.fadeRoute(HomeScreen.routeName, HomeScreen()));
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: Responsive.getDeviceWidth(),
-      height: Responsive.getDeviceHeight(),
-      decoration: BoxDecoration(
-          image: DecorationImage(
-        image: Util.getLocalImage(GameConstants.background),
-        fit: BoxFit.cover,
-      )),
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: Container(
-            color: Colors.transparent,
-            width: Responsive.getDeviceWidth(),
-            height: Responsive.getDeviceHeight(),
-            child: Stack(fit: StackFit.expand, children: [
-              Positioned(
-                  child: Align(
-                alignment: Alignment.topCenter,
-                child: Column(
-                  children: [
-                    ScreenTopBar(
-                      barValue: 0.1,
-                      onBackTap: onBackTap,
+    return WillPopScope(
+        onWillPop: _onBackPressed,
+        child: Container(
+          width: Responsive.getDeviceWidth(),
+          height: Responsive.getDeviceHeight(),
+          decoration: BoxDecoration(
+              image: DecorationImage(
+            image: Util.getLocalImage(GameConstants.background),
+            fit: BoxFit.cover,
+          )),
+          child: Scaffold(
+            backgroundColor: Colors.transparent,
+            body: Container(
+                color: Colors.transparent,
+                width: Responsive.getDeviceWidth(),
+                height: Responsive.getDeviceHeight(),
+                child: Stack(fit: StackFit.expand, children: [
+                  Positioned(
+                      child: Align(
+                    alignment: Alignment.topCenter,
+                    child: Column(
+                      children: [
+                        ScreenTopBar(
+                          barValue: 0.1,
+                          onBackTap: onBackTap,
+                        ),
+                        addItemsWidget(),
+                        listWidget(),
+                      ],
                     ),
-                    addItemsWidget(),
-                    listWidget(),
-                  ],
-                ),
-              )),
-              plusButtonWidget(),
-              if (showBottomBar) bottomBar()
-            ])),
-      ),
-    );
+                  )),
+                  plusButtonWidget(),
+                  if (showBottomBar) bottomBar()
+                ])),
+          ),
+        ));
+  }
+
+  void popUntilRoot() {
+    if (Navigator.of(context).canPop()) {
+      Navigator.pop(context);
+      popUntilRoot();
+    }
   }
 
   void onBackTap() {
-    Navigator.pop(context);
+    popUntilRoot();
+    Navigator.push(context,
+        ScreenTransition.fadeRoute(HomeScreen.routeName, HomeScreen()));
   }
 
   void onBottomButtonTap() {
+    GameLogic.setCurrentStage(1);
     if (items.isEmpty) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text('Add some item!')));

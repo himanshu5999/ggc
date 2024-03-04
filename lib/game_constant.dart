@@ -53,4 +53,5 @@ class GameConstants {
   static const String jewelNotif = "jewel_notif.webp";
   static const String leafBack = "leaf_back.png";
   static const String storeBag = "store_bag.png";
+  static const String shareIcon = "share_icon.png";
 }

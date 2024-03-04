@@ -86,16 +86,10 @@ class _TakeBagScreenState extends State<TakeBagScreen> {
   }
 
   void onBottomButtonTap() {
-    GameLogic.setCurrentStage(1);
-    Navigator.pushAndRemoveUntil(
+    GameLogic.setCurrentStage(2);
+    Navigator.push(
         context,
         ScreenTransition.slideRouteToLeft(
-            BoughtItemScreen.routeName, const BoughtItemScreen()), (route) {
-      if (route.settings.name == HomeScreen.routeName) {
-        return true;
-      } else {
-        return false;
-      }
-    });
+            BoughtItemScreen.routeName, const BoughtItemScreen()));
   }
 }

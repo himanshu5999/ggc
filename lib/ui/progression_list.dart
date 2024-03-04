@@ -182,9 +182,21 @@ class _ProgressionListState extends State<ProgressionList> {
     return CircularPercentIndicator(
       radius: Responsive.getValueInPixel(330) / 2,
       lineWidth: Responsive.getValueInPixel(30),
-      percent: GameLogic.gameData.currStage == 0 ? 0 : 0.5,
+      percent: percentage(),
       backgroundColor: Color(0x002C383F).withOpacity(1),
       progressColor: Color(0x00CE82FF).withOpacity(1),
     );
+  }
+
+  double percentage() {
+    if (GameLogic.gameData.currStage == 0) {
+      return 0.0;
+    } else if (GameLogic.gameData.currStage == 1) {
+      return 0.3;
+    } else if (GameLogic.gameData.currStage == 2) {
+      return 0.6;
+    } else {
+      return 1.0;
+    }
   }
 }

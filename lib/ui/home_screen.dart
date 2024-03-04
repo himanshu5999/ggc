@@ -1,7 +1,10 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:ggc/logic/game_logic.dart';
 import 'package:ggc/ui/app_bar.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../game_constant.dart';
 import '../responsive.dart';
 import '../util.dart';
@@ -17,8 +20,17 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   late ScrollButtonModel scrollButtonModel;
+  Random random = Random();
+  String doYouKnowText = "";
+  String link = "";
+  late Uri url;
   @override
   void initState() {
+    int index = random.nextInt(5);
+    List<String> info = GameLogic.getDoYouInfo(index);
+    doYouKnowText = info[0];
+    link = info[1];
+    url = Uri.parse("link");
     scrollButtonModel = ScrollButtonModel(this);
     super.initState();
   }
@@ -73,49 +85,74 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           Image(
             image: Util.getLocalImage(GameConstants.doYouKnow),
           ),
-          Container(
-            height: Responsive.getDefaultHeightDim(300),
-            width: 0.7 * Responsive.getDeviceWidth(),
-            margin: EdgeInsets.only(left: Responsive.getValueInPixel(50)),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "DO YOU KNOW?",
-                  style: TextStyle(
-                    decoration: TextDecoration.none,
-                    color: const Color(0xffF0DAFF),
-                    fontWeight: FontWeight.w500,
-                    fontStyle: FontStyle.normal,
-                    fontFamily: GameConstants.fontFamily,
-                    fontSize: Responsive.getFontSize(60),
-                  ),
-                  textScaleFactor: 1.0,
-                  textAlign: TextAlign.start,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                height: Responsive.getDefaultHeightDim(300),
+                width: 0.7 * Responsive.getDeviceWidth(),
+                margin: EdgeInsets.only(left: Responsive.getValueInPixel(50)),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "DO YOU KNOW?",
+                      style: TextStyle(
+                        decoration: TextDecoration.none,
+                        color: const Color(0xffF0DAFF),
+                        fontWeight: FontWeight.w500,
+                        fontStyle: FontStyle.normal,
+                        fontFamily: GameConstants.fontFamily,
+                        fontSize: Responsive.getFontSize(60),
+                      ),
+                      textScaleFactor: 1.0,
+                      textAlign: TextAlign.start,
+                    ),
+                    Container(
+                      height: Responsive.getValueInPixel(10),
+                    ),
+                    Text(
+                      doYouKnowText,
+                      style: TextStyle(
+                        decoration: TextDecoration.none,
+                        color: const Color(0xffFFFFFF),
+                        fontWeight: FontWeight.w500,
+                        fontStyle: FontStyle.normal,
+                        fontFamily: GameConstants.fontFamily,
+                        fontSize: Responsive.getFontSize(65),
+                      ),
+                      textScaleFactor: 1.0,
+                      textAlign: TextAlign.start,
+                    ),
+                  ],
                 ),
-                Container(
-                  height: Responsive.getValueInPixel(10),
+              ),
+              GestureDetector(
+                onTap: () async {
+                  launchURL(link);
+                },
+                child: Container(
+                  color: Colors.transparent,
+                  margin:
+                      EdgeInsets.only(right: Responsive.getValueInPixel(50)),
+                  width: 0.1 * Responsive.getDeviceWidth(),
+                  height: Responsive.getDefaultHeightDim(100),
                 ),
-                Text(
-                  "A reusable bag needs to be used at least 131 times",
-                  style: TextStyle(
-                    decoration: TextDecoration.none,
-                    color: const Color(0xffFFFFFF),
-                    fontWeight: FontWeight.w500,
-                    fontStyle: FontStyle.normal,
-                    fontFamily: GameConstants.fontFamily,
-                    fontSize: Responsive.getFontSize(70),
-                  ),
-                  textScaleFactor: 1.0,
-                  textAlign: TextAlign.start,
-                ),
-              ],
-            ),
+              )
+            ],
           )
         ],
       ),
     );
+  }
+
+  void launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }
 

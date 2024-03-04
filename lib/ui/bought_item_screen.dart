@@ -69,16 +69,7 @@ class _BoughtItemScreenState extends State<BoughtItemScreen> {
   }
 
   void onBackTap() {
-    popUntilRoot();
-    Navigator.push(context,
-        ScreenTransition.fadeRoute(HomeScreen.routeName, HomeScreen()));
-  }
-
-  void popUntilRoot() {
-    if (Navigator.of(context).canPop()) {
-      Navigator.pop(context);
-      popUntilRoot();
-    }
+    Navigator.pop(context);
   }
 
   Widget listWidget() {

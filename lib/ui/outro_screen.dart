@@ -61,7 +61,7 @@ class _OutroScreenState extends State<OutroScreen>
   void _initAnimationController() {
     animationController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 7000),
+      duration: const Duration(milliseconds: 5000),
     );
     animationController.addListener(() {
       if (animationController.value >= 0.45 && !isSunRewarded) {

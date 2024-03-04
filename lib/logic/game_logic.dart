@@ -19,6 +19,18 @@ class GameLogic {
   static const String _storageFile = "GameData.json";
   static late StringStorage ss;
   static late ScrollController scrollController;
+  static Map<String, String> doYouKnowText = {
+    "A reusable bag needs to be used at least 131 times":
+        "https://edition.cnn.com/2023/03/13/world/reusable-grocery-bags-cotton-plastic-scn/index.html",
+    "India generates 26,000 tonnes of plastic waste daily":
+        "https://www.sciencedirect.com/science/article/abs/pii/S2214785323020539",
+    "Plastic usage is higher among the people who follow unsanitary methods of disposal":
+        "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10616534/",
+    "Only 10-14% of plastics will be recycled by 2030":
+        "https://www.ellenmacarthurfoundation.org/plastics-and-the-circular-economy-deep-dive",
+    "Plastics crisis requires reducing use and improving material sustainability":
+        "https://www.nature.com/articles/s41893-023-01236-z"
+  };
   static Future<void> init() async {
     await loadData();
     initScrollController();
@@ -87,17 +99,10 @@ class GameLogic {
   }
 
   static void navigateFromHome(BuildContext context) {
-    if (gameData.currStage == 0) {
-      Navigator.push(
-          context,
-          ScreenTransition.slideRouteToLeft(
-              AddListItemScreen.routeName, const AddListItemScreen()));
-    } else {
-      Navigator.push(
-          context,
-          ScreenTransition.slideRouteToLeft(
-              BoughtItemScreen.routeName, const BoughtItemScreen()));
-    }
+    Navigator.push(
+        context,
+        ScreenTransition.slideRouteToLeft(
+            AddListItemScreen.routeName, const AddListItemScreen()));
   }
 
   static bool allItemBought() {
@@ -123,5 +128,14 @@ class GameLogic {
     offset =
         min((131) * levelHeight - (Responsive.getDeviceHeight() / 2), offset);
     return offset;
+  }
+
+  static List<String> getDoYouInfo(int index) {
+    List<String> info = [];
+    String text = doYouKnowText.keys.elementAt(index);
+    String link = doYouKnowText[text] ?? "";
+    info.add(text);
+    info.add(link);
+    return info;
   }
 }
