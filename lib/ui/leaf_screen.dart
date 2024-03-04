@@ -35,6 +35,10 @@ class _LeafScreenState extends State<LeafScreen> with TickerProviderStateMixin {
       parent: fadeController,
       curve: Curves.easeInOut,
     ));
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      BottomBar.jewelNotifModel.hideNotif(LeafScreen.routeName);
+    });
+
     _load();
   }
 
@@ -91,7 +95,7 @@ class _LeafScreenState extends State<LeafScreen> with TickerProviderStateMixin {
           Image(
             width: Responsive.getDeviceWidth(),
             height: Responsive.getDeviceHeight(),
-            image: Util.getLocalImage(GameConstants.background),
+            image: Util.getLocalImage(GameConstants.leafBack),
             fit: BoxFit.fill,
           ),
           FadeTransition(opacity: fadeAnimation, child: getTreeWidget()),
