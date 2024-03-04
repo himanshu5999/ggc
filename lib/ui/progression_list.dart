@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:ggc/logic/game_logic.dart';
+import 'package:ggc/ui/home_screen.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 import '../game_constant.dart';
@@ -9,6 +10,7 @@ import '../responsive.dart';
 import '../util.dart';
 
 class ProgressionList extends StatefulWidget {
+  final ScrollButtonModel? scrollButtonModel;
   static List<double> listMargin = [
     0,
     -120,
@@ -25,7 +27,7 @@ class ProgressionList extends StatefulWidget {
     0
   ];
 
-  const ProgressionList({super.key});
+  const ProgressionList({super.key, this.scrollButtonModel});
 
   @override
   State<ProgressionList> createState() => _ProgressionListState();
@@ -34,9 +36,27 @@ class ProgressionList extends StatefulWidget {
 class _ProgressionListState extends State<ProgressionList> {
   @override
   void initState() {
+    double itemExtent = Responsive.getValueInPixel(200);
     GameLogic.scrollController =
         ScrollController(initialScrollOffset: getInitialOffset());
     super.initState();
+    GameLogic.scrollController.addListener(() {
+      if (GameLogic.scrollController.offset >
+          GameLogic.getActiveOffset() + itemExtent * 5) {
+        widget.scrollButtonModel!.show(false, true);
+      } else if (GameLogic.scrollController.offset <
+          GameLogic.getActiveOffset() - itemExtent * 5) {
+        widget.scrollButtonModel!.show(true, false);
+      } else {
+        widget.scrollButtonModel!.hide();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    GameLogic.scrollController.dispose();
+    super.dispose();
   }
 
   double getInitialOffset() {

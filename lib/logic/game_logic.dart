@@ -1,10 +1,12 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:ggc/download.dart';
 import 'package:ggc/model/game_data.dart';
 import 'package:ggc/ui/bought_item_screen.dart';
 
+import '../responsive.dart';
 import '../screen_transition.dart';
 import '../ui/add_list_item_screen.dart';
 import '../util.dart';
@@ -90,5 +92,26 @@ class GameLogic {
 
   static bool allItemBought() {
     return true;
+  }
+
+  static void scrollToActiveIndex() {
+    if (GameLogic.scrollController.hasClients) {
+      GameLogic.scrollController.animateTo(
+        getActiveOffset(),
+        duration: Duration(milliseconds: 250),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
+  static double getActiveOffset() {
+    int activeLevel = GameLogic.gameData.currLevel;
+    double levelHeight = Responsive.getValueInPixel(220);
+    double offset =
+        (activeLevel + 4) * levelHeight - (Responsive.getDeviceHeight() / 2);
+    offset = max(0, offset);
+    offset =
+        min((131) * levelHeight - (Responsive.getDeviceHeight() / 2), offset);
+    return offset;
   }
 }

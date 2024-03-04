@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:ggc/logic/game_logic.dart';
 import 'package:ggc/ui/app_bar.dart';
-
+import 'package:provider/provider.dart';
 import '../game_constant.dart';
 import '../responsive.dart';
 import '../util.dart';
@@ -14,7 +15,14 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
+  late ScrollButtonModel scrollButtonModel;
+  @override
+  void initState() {
+    scrollButtonModel = ScrollButtonModel(this);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,11 +42,20 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Column(
               children: [
                 const CustomAppBar(),
-                const Expanded(child: ProgressionList()),
+                Expanded(
+                    child: ProgressionList(
+                  scrollButtonModel: scrollButtonModel,
+                )),
                 BottomBar(HomeScreen.routeName),
               ],
             ),
           )),
+          Positioned(
+            bottom: Responsive.getDefaultHeightDim(BottomBar.height + 50),
+            right: Responsive.getValueInPixel(50),
+            child: ChangeNotifierProvider.value(
+                value: scrollButtonModel, child: const ScrollButton()),
+          ),
           doYouKnowWidget(),
         ]),
       ),
@@ -104,7 +121,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
 class ScrollButtonModel extends ChangeNotifier {
   bool isVisible = false;
-  bool disabled = false;
+  bool showButton = false;
+  bool scrollUp = false;
+  bool scrollDown = false;
+  bool disable = false;
   late AnimationController animationController;
   late Animation<double> fadeAnimation;
 
@@ -121,34 +141,98 @@ class ScrollButtonModel extends ChangeNotifier {
         ),
       ),
     );
+    animationController.addStatusListener((status) {
+      if (status == AnimationStatus.dismissed) {
+        disable = false;
+      }
+    });
   }
+
   @override
   void dispose() {
     animationController.dispose();
     super.dispose();
   }
 
-  void show() {
-    if (isVisible) {
+  void show(bool scrollup, bool scrolldown) {
+    if (isVisible || disable) {
       return;
     }
     isVisible = true;
-    animationController.forward();
+    showButton = true;
+    scrollDown = scrolldown;
+    scrollUp = scrollup;
+    notifyListeners();
+    animationController.forward(from: 0.0);
   }
 
-  void hide({bool force = false}) {
+  void hide() {
     if (!isVisible) {
       return;
     }
+    disable = true;
+    isVisible = false;
+    showButton = false;
+    scrollDown = false;
+    scrollUp = false;
+    notifyListeners();
     animationController.reverse();
   }
 }
 
-class ScrollButton extends StatelessWidget {
+class ScrollButton extends StatefulWidget {
   const ScrollButton({super.key});
 
   @override
+  State<ScrollButton> createState() => _ScrollButtonState();
+}
+
+class _ScrollButtonState extends State<ScrollButton> {
+  @override
   Widget build(BuildContext context) {
-    return Container();
+    return Consumer<ScrollButtonModel>(builder: (context, model, _) {
+      return model.showButton
+          ? Container(
+              width: Responsive.getValueInPixel(200),
+              height: Responsive.getValueInPixel(200),
+              child: Stack(children: [
+                model.scrollUp
+                    ? FadeTransition(
+                        opacity: model.fadeAnimation,
+                        child: GestureDetector(
+                          onTap: () {
+                            GameLogic.scrollToActiveIndex();
+                            model.hide();
+                          },
+                          child: Container(
+                            width: Responsive.getValueInPixel(215),
+                            height: Responsive.getValueInPixel(228),
+                            child: Image(
+                                image:
+                                    Util.getLocalImage(GameConstants.scrollUp)),
+                          ),
+                        ))
+                    : Container(),
+                model.scrollDown
+                    ? FadeTransition(
+                        opacity: model.fadeAnimation,
+                        child: GestureDetector(
+                          onTap: () {
+                            GameLogic.scrollToActiveIndex();
+                            model.hide();
+                          },
+                          child: Container(
+                            width: Responsive.getValueInPixel(215),
+                            height: Responsive.getValueInPixel(228),
+                            child: Image(
+                                image: Util.getLocalImage(
+                                    GameConstants.scrollDown)),
+                          ),
+                        ))
+                    : Container(),
+              ]),
+            )
+          : Container();
+    });
   }
 }

@@ -48,4 +48,6 @@ class GameConstants {
   static const String leafToaster = "leaf_toaster.png";
   static const String line = "line.png";
   static const String rays = "rays.png";
+  static const String scrollDown = "arrow_down.png";
+  static const String scrollUp = "arrow_up.png";
 }

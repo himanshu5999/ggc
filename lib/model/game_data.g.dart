@@ -14,7 +14,8 @@ GameData _$GameDataFromJson(Map<String, dynamic> json) => GameData()
   ..listData = (json['ld'] as Map<String, dynamic>?)?.map(
         (k, e) => MapEntry(k, e as bool),
       ) ??
-      {};
+      {}
+  ..currTreeLevel = json['ctl'] as int? ?? 0;
 
 Map<String, dynamic> _$GameDataToJson(GameData instance) => <String, dynamic>{
       'sc': instance.sunCurrency,
@@ -22,4 +23,5 @@ Map<String, dynamic> _$GameDataToJson(GameData instance) => <String, dynamic>{
       'cl': instance.currLevel,
       'cs': instance.currStage,
       'ld': instance.listData,
+      'ctl': instance.currTreeLevel,
     };

@@ -21,14 +21,14 @@ class LeafLogic {
   }
 
   static Future<void> loadTreeData() async {
-    String data = await rootBundle.loadString(GameConstants.getLocalConfigPath(treeJsonFile));
-    treeData = {
-      ...json.decode(data)
-    };
+    String data = await rootBundle
+        .loadString(GameConstants.getLocalConfigPath(treeJsonFile));
+    treeData = {...json.decode(data)};
   }
 
   static Future<void> loadRiveFile() async {
-    ByteData data = await rootBundle.load(GameConstants.getLocalAnimationPath(GameConstants.treeRive));
+    ByteData data = await rootBundle
+        .load(GameConstants.getLocalAnimationPath(GameConstants.treeRive));
     riveFile = RiveFile.import(data);
   }
 
@@ -47,7 +47,7 @@ class LeafLogic {
 
   static int nextLevelSunNeeded() {
     String level = (getCurrTreeLevel() + 1).toString();
-    if(treeData.containsKey(level)) {
+    if (treeData.containsKey(level)) {
       Map<String, dynamic>? data = treeData[level];
       return data!["s"] ?? 0;
     }
@@ -56,7 +56,7 @@ class LeafLogic {
 
   static int nextLevelWaterNeeded() {
     String level = (getCurrTreeLevel() + 1).toString();
-    if(treeData.containsKey(level)) {
+    if (treeData.containsKey(level)) {
       return treeData[level]!["w"] ?? 0;
     }
     return 0;
@@ -64,7 +64,7 @@ class LeafLogic {
 
   static double nextLevelTriggerVal() {
     String level = (getCurrTreeLevel() + 1).toString();
-    if(treeData.containsKey(level)) {
+    if (treeData.containsKey(level)) {
       return treeData[level]!["t"] ?? 0.0;
     }
     return 0.0;
@@ -72,7 +72,7 @@ class LeafLogic {
 
   static double currLevelTriggerVal() {
     String level = (getCurrTreeLevel()).toString();
-    if(treeData.containsKey(level)) {
+    if (treeData.containsKey(level)) {
       return treeData[level]!["t"] ?? 0;
     }
     return 0.0;
@@ -81,6 +81,15 @@ class LeafLogic {
   static bool canUpgradeTree() {
     int sunNeeded = nextLevelSunNeeded();
     int waterNeeded = nextLevelWaterNeeded();
-    return GameLogic.gameData.dropletCurrency >= waterNeeded && GameLogic.gameData.sunCurrency >= sunNeeded;
+    return GameLogic.gameData.dropletCurrency >= waterNeeded &&
+        GameLogic.gameData.sunCurrency >= sunNeeded;
+  }
+
+  static currnecyDecrement() {
+    int sunNeeded = nextLevelSunNeeded();
+    int waterNeeded = nextLevelWaterNeeded();
+    GameLogic.gameData.dropletCurrency -= waterNeeded;
+    GameLogic.gameData.sunCurrency -= sunNeeded;
+    GameLogic.saveData();
   }
 }

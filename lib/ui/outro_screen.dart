@@ -411,7 +411,14 @@ class _OutroScreenState extends State<OutroScreen>
     if (!enebleButton) {
       return;
     }
-    Navigator.pushReplacement(context,
-        ScreenTransition.fadeRoute(HomeScreen.routeName, const HomeScreen()));
+    Navigator.pushAndRemoveUntil(context,
+        ScreenTransition.slideRouteToLeft(HomeScreen.routeName, HomeScreen()),
+        (route) {
+      if (route.settings.name == "/") {
+        return true;
+      } else {
+        return false;
+      }
+    });
   }
 }

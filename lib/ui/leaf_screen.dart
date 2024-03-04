@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:ggc/logic/game_logic.dart';
 import 'package:ggc/ui/app_bar.dart';
 import 'package:rive/rive.dart';
 
@@ -41,7 +42,8 @@ class _LeafScreenState extends State<LeafScreen> {
   Future<void> _load() async {
     showTree = LeafLogic.getCurrTreeLevel() > 0;
     _riveArtboard = LeafLogic.riveFile.mainArtboard.instance();
-    mainStateController = StateMachineController.fromArtboard(_riveArtboard!, "State Machine 1");
+    mainStateController =
+        StateMachineController.fromArtboard(_riveArtboard!, "State Machine 1");
     _riveArtboard!.addController(mainStateController!);
     updateProgress(LeafLogic.currLevelTriggerVal());
     SchedulerBinding.instance.addPostFrameCallback((_) {
@@ -62,6 +64,7 @@ class _LeafScreenState extends State<LeafScreen> {
     if (!LeafLogic.canUpgradeTree()) {
       return;
     }
+    LeafLogic.currnecyDecrement();
     double trigger = LeafLogic.nextLevelTriggerVal();
     LeafLogic.completeLevel();
     updateProgress(trigger);
@@ -90,10 +93,13 @@ class _LeafScreenState extends State<LeafScreen> {
             alignment: Alignment.bottomCenter,
             child: BottomBar(LeafScreen.routeName),
           )),
-          const Positioned.fill(
+          Positioned.fill(
               child: Align(
             alignment: Alignment.topCenter,
-            child: CustomAppBar(),
+            child: CustomAppBar(
+              sunCurrency: GameLogic.gameData.sunCurrency,
+              dropletCurrency: GameLogic.gameData.dropletCurrency,
+            ),
           ))
         ]),
       ),
@@ -110,7 +116,8 @@ class _LeafScreenState extends State<LeafScreen> {
             child: Container(
               width: Responsive.getDeviceWidth(),
               height: Responsive.getDeviceHeight(),
-              margin: EdgeInsets.only(bottom: Responsive.getDefaultHeightDim(BottomBar.height)),
+              margin: EdgeInsets.only(
+                  bottom: Responsive.getDefaultHeightDim(BottomBar.height)),
               child: Stack(
                 children: [
                   Rive(
@@ -126,7 +133,8 @@ class _LeafScreenState extends State<LeafScreen> {
 
   Widget upgradeBanner() {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: Responsive.getDefaultWidthDim(70)),
+      padding:
+          EdgeInsets.symmetric(horizontal: Responsive.getDefaultWidthDim(70)),
       margin: EdgeInsets.only(top: Responsive.getDefaultHeightDim(400)),
       height: Responsive.getDefaultHeightDim(500),
       child: Stack(
@@ -141,7 +149,8 @@ class _LeafScreenState extends State<LeafScreen> {
               Container(
                 width: Responsive.getDeviceWidth() * 0.65,
                 height: Responsive.getDefaultHeightDim(400),
-                margin: EdgeInsets.only(left: Responsive.getDefaultHeightDim(50)),
+                margin:
+                    EdgeInsets.only(left: Responsive.getDefaultHeightDim(50)),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -165,7 +174,11 @@ class _LeafScreenState extends State<LeafScreen> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Image(height: Responsive.getValueInPixel(90), width: Responsive.getValueInPixel(100), image: Util.getLocalImage(GameConstants.sunIcon)),
+                              Image(
+                                  height: Responsive.getValueInPixel(90),
+                                  width: Responsive.getValueInPixel(100),
+                                  image: Util.getLocalImage(
+                                      GameConstants.sunIcon)),
                               Container(
                                 width: Responsive.getValueInPixel(20),
                               ),
@@ -186,11 +199,16 @@ class _LeafScreenState extends State<LeafScreen> {
                           ),
                         ),
                         Container(
-                          margin: EdgeInsets.only(left: Responsive.getValueInPixel(200)),
+                          margin: EdgeInsets.only(
+                              left: Responsive.getValueInPixel(200)),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Image(height: Responsive.getValueInPixel(90), width: Responsive.getValueInPixel(100), image: Util.getLocalImage(GameConstants.droplet)),
+                              Image(
+                                  height: Responsive.getValueInPixel(90),
+                                  width: Responsive.getValueInPixel(100),
+                                  image: Util.getLocalImage(
+                                      GameConstants.droplet)),
                               Container(
                                 width: Responsive.getValueInPixel(20),
                               ),
@@ -217,7 +235,8 @@ class _LeafScreenState extends State<LeafScreen> {
                 ),
               ),
               Container(
-                margin: EdgeInsets.only(left: Responsive.getDefaultWidthDim(100)),
+                margin:
+                    EdgeInsets.only(left: Responsive.getDefaultWidthDim(100)),
                 child: Image(
                   height: Responsive.getValueInPixel(470),
                   image: Util.getLocalImage(GameConstants.line),
@@ -246,7 +265,9 @@ class _LeafScreenState extends State<LeafScreen> {
             child: Image(
               width: Responsive.getDefaultWidthDim(1178),
               height: Responsive.getDefaultHeightDim(120),
-              image: !isButtonEnable() ? Util.getLocalImage(GameConstants.disableButton) : Util.getLocalImage(GameConstants.listButton),
+              image: !isButtonEnable()
+                  ? Util.getLocalImage(GameConstants.disableButton)
+                  : Util.getLocalImage(GameConstants.listButton),
               fit: BoxFit.fill,
             ),
           ),
@@ -258,7 +279,8 @@ class _LeafScreenState extends State<LeafScreen> {
                 "UPGRADE NOW",
                 style: TextStyle(
                   decoration: TextDecoration.none,
-                  color: isButtonEnable() ? Colors.white : const Color(0xffAFAFAF),
+                  color:
+                      isButtonEnable() ? Colors.white : const Color(0xffAFAFAF),
                   fontWeight: FontWeight.w500,
                   fontStyle: FontStyle.normal,
                   fontFamily: GameConstants.fontFamily,
