@@ -87,7 +87,7 @@ class _LeafScreenState extends State<LeafScreen> {
           Image(
             width: Responsive.getDeviceWidth(),
             height: Responsive.getDeviceHeight(),
-            image: Util.getLocalImage(GameConstants.background),
+            image: Util.getLocalImage(GameConstants.leafBack),
             fit: BoxFit.fill,
           ),
           getTreeWidget(),
