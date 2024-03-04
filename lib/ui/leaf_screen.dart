@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:ggc/ui/app_bar.dart';
 import 'package:rive/rive.dart';
 
@@ -19,6 +22,7 @@ class LeafScreen extends StatefulWidget {
 class _LeafScreenState extends State<LeafScreen> {
   Artboard? _riveArtboard;
   StateMachineController? mainStateController;
+  bool showTree = false;
 
   @override
   void initState() {
@@ -35,21 +39,35 @@ class _LeafScreenState extends State<LeafScreen> {
   }
 
   Future<void> _load() async {
-    if (mounted) {
-      setState(() {
-        _riveArtboard = LeafLogic.riveFile.mainArtboard.instance();
-      });
-    }
-
-    mainStateController =
-        StateMachineController.fromArtboard(_riveArtboard!, "State Machine 1");
+    showTree = LeafLogic.getCurrTreeLevel() > 0;
+    _riveArtboard = LeafLogic.riveFile.mainArtboard.instance();
+    mainStateController = StateMachineController.fromArtboard(_riveArtboard!, "State Machine 1");
     _riveArtboard!.addController(mainStateController!);
     updateProgress(LeafLogic.currLevelTriggerVal());
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      Timer(const Duration(milliseconds: 500), () {
+        if (mounted) {
+          setState(() {});
+        }
+      });
+    });
   }
 
   void updateProgress(double val) {
     SMINumber input = mainStateController!.findSMI("input");
     input.change(val);
+  }
+
+  void handleUpgrade() {
+    if (!LeafLogic.canUpgradeTree()) {
+      return;
+    }
+    double trigger = LeafLogic.nextLevelTriggerVal();
+    LeafLogic.completeLevel();
+    updateProgress(trigger);
+    setState(() {
+      showTree = true;
+    });
   }
 
   @override
@@ -65,8 +83,8 @@ class _LeafScreenState extends State<LeafScreen> {
             image: Util.getLocalImage(GameConstants.background),
             fit: BoxFit.fill,
           ),
-          // getTreeWidget(),
-          upgradeBanner(5, 10),
+          getTreeWidget(),
+          if (!LeafLogic.isEOC()) upgradeBanner(),
           Positioned.fill(
               child: Align(
             alignment: Alignment.bottomCenter,
@@ -83,15 +101,15 @@ class _LeafScreenState extends State<LeafScreen> {
   }
 
   Widget getTreeWidget() {
-    return _riveArtboard == null
+    return _riveArtboard == null || !showTree
         ? Container(
             color: Colors.red.withOpacity(0.0),
           )
         : Transform.translate(
-          offset: Offset(0, 0.0),
-          child: Container(
-            width: Responsive.getDeviceWidth(),
-            height: Responsive.getDeviceHeight(),
+            offset: Offset(0, 0.0),
+            child: Container(
+              width: Responsive.getDeviceWidth(),
+              height: Responsive.getDeviceHeight(),
               margin: EdgeInsets.only(bottom: Responsive.getDefaultHeightDim(BottomBar.height)),
               child: Stack(
                 children: [
@@ -106,10 +124,9 @@ class _LeafScreenState extends State<LeafScreen> {
           );
   }
 
-  Widget upgradeBanner(int reqSun, int reqDroplet) {
+  Widget upgradeBanner() {
     return Container(
-      padding:
-          EdgeInsets.symmetric(horizontal: Responsive.getDefaultWidthDim(70)),
+      padding: EdgeInsets.symmetric(horizontal: Responsive.getDefaultWidthDim(70)),
       margin: EdgeInsets.only(top: Responsive.getDefaultHeightDim(400)),
       height: Responsive.getDefaultHeightDim(500),
       child: Stack(
@@ -124,8 +141,7 @@ class _LeafScreenState extends State<LeafScreen> {
               Container(
                 width: Responsive.getDeviceWidth() * 0.65,
                 height: Responsive.getDefaultHeightDim(400),
-                margin:
-                    EdgeInsets.only(left: Responsive.getDefaultHeightDim(50)),
+                margin: EdgeInsets.only(left: Responsive.getDefaultHeightDim(50)),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -149,16 +165,12 @@ class _LeafScreenState extends State<LeafScreen> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Image(
-                                  height: Responsive.getValueInPixel(90),
-                                  width: Responsive.getValueInPixel(100),
-                                  image: Util.getLocalImage(
-                                      GameConstants.sunIcon)),
+                              Image(height: Responsive.getValueInPixel(90), width: Responsive.getValueInPixel(100), image: Util.getLocalImage(GameConstants.sunIcon)),
                               Container(
                                 width: Responsive.getValueInPixel(20),
                               ),
                               Text(
-                                "$reqSun",
+                                "${LeafLogic.nextLevelSunNeeded()}",
                                 style: TextStyle(
                                   decoration: TextDecoration.none,
                                   color: const Color(0xffF19B38),
@@ -174,21 +186,16 @@ class _LeafScreenState extends State<LeafScreen> {
                           ),
                         ),
                         Container(
-                          margin: EdgeInsets.only(
-                              left: Responsive.getValueInPixel(200)),
+                          margin: EdgeInsets.only(left: Responsive.getValueInPixel(200)),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Image(
-                                  height: Responsive.getValueInPixel(90),
-                                  width: Responsive.getValueInPixel(100),
-                                  image: Util.getLocalImage(
-                                      GameConstants.droplet)),
+                              Image(height: Responsive.getValueInPixel(90), width: Responsive.getValueInPixel(100), image: Util.getLocalImage(GameConstants.droplet)),
                               Container(
                                 width: Responsive.getValueInPixel(20),
                               ),
                               Text(
-                                "$reqDroplet",
+                                "${LeafLogic.nextLevelWaterNeeded()}",
                                 style: TextStyle(
                                   decoration: TextDecoration.none,
                                   color: const Color(0xff53AEF0),
@@ -210,8 +217,7 @@ class _LeafScreenState extends State<LeafScreen> {
                 ),
               ),
               Container(
-                margin:
-                    EdgeInsets.only(left: Responsive.getDefaultWidthDim(100)),
+                margin: EdgeInsets.only(left: Responsive.getDefaultWidthDim(100)),
                 child: Image(
                   height: Responsive.getValueInPixel(470),
                   image: Util.getLocalImage(GameConstants.line),
@@ -230,7 +236,7 @@ class _LeafScreenState extends State<LeafScreen> {
         if (!isButtonEnable()) {
           return;
         }
-        // onButtonTap();
+        handleUpgrade();
       },
       child: Center(
         child: Stack(children: [
@@ -240,9 +246,7 @@ class _LeafScreenState extends State<LeafScreen> {
             child: Image(
               width: Responsive.getDefaultWidthDim(1178),
               height: Responsive.getDefaultHeightDim(120),
-              image: !isButtonEnable()
-                  ? Util.getLocalImage(GameConstants.disableButton)
-                  : Util.getLocalImage(GameConstants.listButton),
+              image: !isButtonEnable() ? Util.getLocalImage(GameConstants.disableButton) : Util.getLocalImage(GameConstants.listButton),
               fit: BoxFit.fill,
             ),
           ),
@@ -254,8 +258,7 @@ class _LeafScreenState extends State<LeafScreen> {
                 "UPGRADE NOW",
                 style: TextStyle(
                   decoration: TextDecoration.none,
-                  color:
-                      isButtonEnable() ? Colors.white : const Color(0xffAFAFAF),
+                  color: isButtonEnable() ? Colors.white : const Color(0xffAFAFAF),
                   fontWeight: FontWeight.w500,
                   fontStyle: FontStyle.normal,
                   fontFamily: GameConstants.fontFamily,

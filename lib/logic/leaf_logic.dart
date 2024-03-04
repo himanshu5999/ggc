@@ -48,7 +48,8 @@ class LeafLogic {
   static int nextLevelSunNeeded() {
     String level = (getCurrTreeLevel() + 1).toString();
     if(treeData.containsKey(level)) {
-      return treeData["${getCurrTreeLevel()}"]!["s"] ?? 0;
+      Map<String, dynamic>? data = treeData[level];
+      return data!["s"] ?? 0;
     }
     return 0;
   }
@@ -56,24 +57,30 @@ class LeafLogic {
   static int nextLevelWaterNeeded() {
     String level = (getCurrTreeLevel() + 1).toString();
     if(treeData.containsKey(level)) {
-      return treeData["${getCurrTreeLevel()}"]!["w"] ?? 0;
+      return treeData[level]!["w"] ?? 0;
     }
     return 0;
   }
 
-  static int nextLevelTriggerVal() {
+  static double nextLevelTriggerVal() {
     String level = (getCurrTreeLevel() + 1).toString();
     if(treeData.containsKey(level)) {
-      return treeData["${getCurrTreeLevel()}"]!["t"] ?? 0;
+      return treeData[level]!["t"] ?? 0.0;
     }
-    return 0;
+    return 0.0;
   }
 
   static double currLevelTriggerVal() {
     String level = (getCurrTreeLevel()).toString();
     if(treeData.containsKey(level)) {
-      return treeData["${getCurrTreeLevel()}"]!["t"] ?? 0;
+      return treeData[level]!["t"] ?? 0;
     }
     return 0.0;
+  }
+
+  static bool canUpgradeTree() {
+    int sunNeeded = nextLevelSunNeeded();
+    int waterNeeded = nextLevelWaterNeeded();
+    return GameLogic.gameData.dropletCurrency >= waterNeeded && GameLogic.gameData.sunCurrency >= sunNeeded;
   }
 }
