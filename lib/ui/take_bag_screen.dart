@@ -42,7 +42,10 @@ class _TakeBagScreenState extends State<TakeBagScreen> {
               alignment: Alignment.topCenter,
               child: Column(
                 children: [
-                  const ScreenTopBar(barValue: 0.4),
+                  ScreenTopBar(
+                    barValue: 0.4,
+                    onBackTap: onBackTap,
+                  ),
                   addItemsWidget(),
                 ],
               ),
@@ -55,6 +58,10 @@ class _TakeBagScreenState extends State<TakeBagScreen> {
             )),
           ])),
     );
+  }
+
+  void onBackTap() {
+    Navigator.pop(context);
   }
 
   Widget addItemsWidget() {

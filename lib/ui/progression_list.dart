@@ -55,7 +55,6 @@ class _ProgressionListState extends State<ProgressionList> {
 
   @override
   void dispose() {
-    GameLogic.scrollController.dispose();
     super.dispose();
   }
 

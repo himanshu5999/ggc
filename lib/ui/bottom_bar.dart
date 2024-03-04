@@ -136,16 +136,7 @@ class BottomBar extends StatelessWidget {
     if (toScreen == fromScreen) {
       return;
     }
-    if (toScreen == HomeScreen.routeName) {
-      if (Navigator.canPop(context)) {
-        Navigator.pop(context);
-      } else {
-        Navigator.pushReplacement(
-            context, ScreenTransition.fadeRoute(toScreen, screenWidget));
-      }
-    } else {
-      Navigator.pushReplacement(
-          context, ScreenTransition.fadeRoute(toScreen, screenWidget));
-    }
+    Navigator.pushReplacement(
+        context, ScreenTransition.fadeRoute(toScreen, screenWidget));
   }
 }

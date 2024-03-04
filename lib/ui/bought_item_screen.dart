@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ggc/logic/game_logic.dart';
 import 'package:ggc/ui/common_widgets.dart';
+import 'package:ggc/ui/home_screen.dart';
 import 'package:ggc/ui/outro_screen.dart';
 
 import '../game_constant.dart';
@@ -47,7 +48,10 @@ class _BoughtItemScreenState extends State<BoughtItemScreen> {
               alignment: Alignment.topCenter,
               child: Column(
                 children: [
-                  const ScreenTopBar(barValue: 0.7),
+                  ScreenTopBar(
+                    barValue: 0.7,
+                    onBackTap: onBackTap,
+                  ),
                   listWidget(),
                 ],
               ),
@@ -62,6 +66,19 @@ class _BoughtItemScreenState extends State<BoughtItemScreen> {
             )),
           ])),
     );
+  }
+
+  void onBackTap() {
+    popUntilRoot();
+    Navigator.push(context,
+        ScreenTransition.fadeRoute(HomeScreen.routeName, HomeScreen()));
+  }
+
+  void popUntilRoot() {
+    if (Navigator.of(context).canPop()) {
+      Navigator.pop(context);
+      popUntilRoot();
+    }
   }
 
   Widget listWidget() {

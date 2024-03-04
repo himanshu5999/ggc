@@ -211,9 +211,13 @@ class _OutroScreenState extends State<OutroScreen>
             alignment: Alignment.topCenter,
             child: FadeTransition(
               opacity: topBarFadeOutAnimation,
-              child: const Column(
+              child: Column(
                 children: [
-                  ScreenTopBar(showBack: false, barValue: 1.0),
+                  ScreenTopBar(
+                    showBack: false,
+                    barValue: 1.0,
+                    onBackTap: onBackTap,
+                  ),
                 ],
               ),
             ),
@@ -240,6 +244,10 @@ class _OutroScreenState extends State<OutroScreen>
         ]),
       ),
     );
+  }
+
+  void onBackTap() {
+    Navigator.pop(context);
   }
 
   Widget outroTextWidget() {
@@ -411,14 +419,15 @@ class _OutroScreenState extends State<OutroScreen>
     if (!enebleButton) {
       return;
     }
-    Navigator.pushAndRemoveUntil(context,
-        ScreenTransition.slideRouteToLeft(HomeScreen.routeName, HomeScreen()),
-        (route) {
-      if (route.settings.name == "/") {
-        return true;
-      } else {
-        return false;
-      }
-    });
+    popUntilRoot();
+    Navigator.push(context,
+        ScreenTransition.fadeRoute(HomeScreen.routeName, HomeScreen()));
+  }
+
+  void popUntilRoot() {
+    if (Navigator.of(context).canPop()) {
+      Navigator.pop(context);
+      popUntilRoot();
+    }
   }
 }

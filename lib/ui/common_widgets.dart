@@ -8,7 +8,12 @@ import 'bottom_bar.dart';
 class ScreenTopBar extends StatelessWidget {
   final double barValue;
   final bool showBack;
-  const ScreenTopBar({super.key, required this.barValue, this.showBack = true});
+  final Function onBackTap;
+  const ScreenTopBar(
+      {super.key,
+      required this.barValue,
+      this.showBack = true,
+      required this.onBackTap});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +26,7 @@ class ScreenTopBar extends StatelessWidget {
         if (showBack)
           GestureDetector(
             onTap: () {
-              Navigator.pop(context);
+              onBackTap();
             },
             child: Container(
               margin: EdgeInsets.only(left: Responsive.getValueInPixel(80)),

@@ -99,7 +99,10 @@ class _AddListItemScreenState extends State<AddListItemScreen> {
                 alignment: Alignment.topCenter,
                 child: Column(
                   children: [
-                    const ScreenTopBar(barValue: 0.1),
+                    ScreenTopBar(
+                      barValue: 0.1,
+                      onBackTap: onBackTap,
+                    ),
                     addItemsWidget(),
                     listWidget(),
                   ],
@@ -112,8 +115,15 @@ class _AddListItemScreenState extends State<AddListItemScreen> {
     );
   }
 
+  void onBackTap() {
+    Navigator.pop(context);
+  }
+
   void onBottomButtonTap() {
     if (items.isEmpty) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Add some item!')));
+
       return;
     }
     Navigator.push(

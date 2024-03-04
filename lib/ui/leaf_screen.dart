@@ -252,7 +252,10 @@ class _LeafScreenState extends State<LeafScreen> {
   Widget upgradeButton() {
     return GestureDetector(
       onTap: () {
-        if (!isButtonEnable()) {
+        if (!LeafLogic.canUpgradeTree()) {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text('Not enough currency')));
+
           return;
         }
         handleUpgrade();
@@ -265,7 +268,7 @@ class _LeafScreenState extends State<LeafScreen> {
             child: Image(
               width: Responsive.getDefaultWidthDim(1178),
               height: Responsive.getDefaultHeightDim(120),
-              image: !isButtonEnable()
+              image: !LeafLogic.canUpgradeTree()
                   ? Util.getLocalImage(GameConstants.disableButton)
                   : Util.getLocalImage(GameConstants.listButton),
               fit: BoxFit.fill,
@@ -279,8 +282,9 @@ class _LeafScreenState extends State<LeafScreen> {
                 "UPGRADE NOW",
                 style: TextStyle(
                   decoration: TextDecoration.none,
-                  color:
-                      isButtonEnable() ? Colors.white : const Color(0xffAFAFAF),
+                  color: LeafLogic.canUpgradeTree()
+                      ? Colors.white
+                      : const Color(0xffAFAFAF),
                   fontWeight: FontWeight.w500,
                   fontStyle: FontStyle.normal,
                   fontFamily: GameConstants.fontFamily,
@@ -294,9 +298,5 @@ class _LeafScreenState extends State<LeafScreen> {
         ]),
       ),
     );
-  }
-
-  bool isButtonEnable() {
-    return true;
   }
 }
