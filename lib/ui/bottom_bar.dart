@@ -83,12 +83,18 @@ class BottomBar extends StatelessWidget {
   Widget getIconWidget(String screen, bool selected) {
     return Center(
       child: Container(
-        width: Responsive.getValueInPixel(150),
-        height: Responsive.getValueInPixel(150),
+        color: Colors.transparent,
+        width: Responsive.getValueInPixel(350),
+        height: Responsive.getValueInPixel(350),
         child: Stack(
           children: [
             if (selected)
-              Image(image: Util.getLocalImage(GameConstants.bottomSelected)),
+              Center(
+                child: Image(
+                    width: Responsive.getValueInPixel(150),
+                    height: Responsive.getValueInPixel(150),
+                    image: Util.getLocalImage(GameConstants.bottomSelected)),
+              ),
             Center(
               child: Container(
                 width: Responsive.getValueInPixel(100),
