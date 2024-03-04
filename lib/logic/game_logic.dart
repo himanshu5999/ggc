@@ -3,8 +3,11 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:ggc/download.dart';
+import 'package:ggc/logic/leaf_logic.dart';
 import 'package:ggc/model/game_data.dart';
+import 'package:ggc/ui/bottom_bar.dart';
 import 'package:ggc/ui/bought_item_screen.dart';
+import 'package:ggc/ui/leaf_screen.dart';
 
 import '../responsive.dart';
 import '../screen_transition.dart';
@@ -19,6 +22,13 @@ class GameLogic {
   static Future<void> init() async {
     await loadData();
     initScrollController();
+    addJewelNotif();
+  }
+
+  static void addJewelNotif() {
+    if (LeafLogic.canUpgradeTree()) {
+      BottomBar.jewelNotifModel.showNotif(LeafScreen.routeName);
+    }
   }
 
   static void initScrollController() {

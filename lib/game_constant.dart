@@ -50,4 +50,5 @@ class GameConstants {
   static const String rays = "rays.png";
   static const String scrollDown = "arrow_down.png";
   static const String scrollUp = "arrow_up.png";
+  static const String jewelNotif = "jewel_notif.webp";
 }

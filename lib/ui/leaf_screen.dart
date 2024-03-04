@@ -28,6 +28,10 @@ class _LeafScreenState extends State<LeafScreen> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      BottomBar.jewelNotifModel.hideNotif(LeafScreen.routeName);
+    });
+
     _load();
   }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../game_constant.dart';
 import '../responsive.dart';
@@ -8,7 +9,10 @@ import 'home_screen.dart';
 import 'leaf_screen.dart';
 import 'store_screen.dart';
 
+enum JewelNotifType { red, green }
+
 class BottomBar extends StatelessWidget {
+  static JewelNotifModel jewelNotifModel = JewelNotifModel();
   static const double height = 280;
   static const double width = 1440;
   static Map<String, Widget> screens = {
@@ -60,8 +64,11 @@ class BottomBar extends StatelessWidget {
   List<Widget> _getBottomBarList(context, screenName) {
     List<Widget> widgets = [];
     for (String routeName in screens.keys) {
-      widgets.add(_getBottomBarElement(
-          context, routeName, screens[routeName]!, screenName));
+      widgets.add(ChangeNotifierProvider.value(
+        value: jewelNotifModel,
+        child: _getBottomBarElement(
+            context, routeName, screens[routeName]!, screenName),
+      ));
     }
     return widgets;
   }
@@ -77,6 +84,7 @@ class BottomBar extends StatelessWidget {
             width: Responsive.getDefaultWidthDim(iconBlockWidth),
             child: Stack(children: [
               getIconWidget(name, name == screenName),
+              jewelNotifWidget(iconBlockWidth, name),
             ])));
   }
 
@@ -131,6 +139,27 @@ class BottomBar extends StatelessWidget {
     }
   }
 
+  bool hideJewelNotif(String route, JewelNotifModel model) {
+    return model.screenRoute.isEmpty || !model.screenRoute.contains(route);
+  }
+
+  Widget jewelNotifWidget(double iconSize, String route) {
+    return Consumer<JewelNotifModel>(builder: (context, model, _) {
+      if (hideJewelNotif(route, model)) {
+        return Container();
+      }
+      return Positioned(
+        top: Responsive.getValueInPixel(60),
+        left: Responsive.getValueInPixel(50 + iconBlockWidth / 2),
+        child: Image(
+          height: Responsive.getValueInPixel(50),
+          image: Util.getLocalImage(GameConstants.jewelNotif),
+          fit: BoxFit.contain,
+        ),
+      );
+    });
+  }
+
   void onTap(BuildContext context, String toScreen, String fromScreen,
       Widget screenWidget) {
     if (toScreen == fromScreen) {
@@ -138,5 +167,32 @@ class BottomBar extends StatelessWidget {
     }
     Navigator.pushReplacement(
         context, ScreenTransition.fadeRoute(toScreen, screenWidget));
+  }
+}
+
+class JewelNotifModel extends ChangeNotifier {
+  List<String> screenRoute = [];
+
+  static const Map<JewelNotifType, Color> colorMap = {
+    JewelNotifType.red: Colors.red,
+    JewelNotifType.green: Colors.green
+  };
+
+  void showNotif(String notifScreenRoute) {
+    if (!screenRoute.contains(notifScreenRoute)) {
+      screenRoute.add(notifScreenRoute);
+      notifyListeners();
+    }
+  }
+
+  void hideNotif(String notifScreenRoute) {
+    if (screenRoute.contains(notifScreenRoute)) {
+      screenRoute.remove(notifScreenRoute);
+      notifyListeners();
+    }
+  }
+
+  bool canHide(String route) {
+    return screenRoute.isEmpty || !screenRoute.contains(route);
   }
 }
